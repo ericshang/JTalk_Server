@@ -6,6 +6,9 @@
 package rmiPackage;
 
 import java.io.Serializable;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -47,8 +50,6 @@ public class ClientListBox implements RMIClientListInterface, Runnable, Serializ
             registry.rebind("ClientList", stub);//register object stub
             System.out.println("Now the ClientList is turned on.");
             
-            
-            
             while(true){
                 System.out.println(stub.getClients().size());
                 for(Client c : stub.getClients()){
@@ -86,5 +87,6 @@ public class ClientListBox implements RMIClientListInterface, Runnable, Serializ
     }
     public void removeClient(Client c){
         clients.remove(c);
-    }    
+    }
+    
 }

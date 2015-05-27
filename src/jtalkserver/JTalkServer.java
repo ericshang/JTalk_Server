@@ -20,8 +20,13 @@ public class JTalkServer {
         
         
         //create a new thread to main client list
-        Thread ClientList = new Thread(new ClientListBox());
+        ClientListBox clb = new ClientListBox();
+        Thread ClientList = new Thread(clb);
         ClientList.start();
+        
+        messageReceiver receiver = new messageReceiver();
+        Thread receiverThread = new Thread(receiver);
+        receiverThread.start();
         
     }
     
