@@ -6,9 +6,6 @@
 package rmiPackage;
 
 import java.io.Serializable;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -24,6 +21,8 @@ import java.util.logging.Logger;
 public class ClientListBox implements RMIClientListInterface, Runnable, Serializable {
     private ArrayList<Client> clients;
     private RMIClientListInterface remoteObject;
+    
+    private ArrayList<String> messages;
     
     public ClientListBox(){
         clients = new ArrayList<Client>();
@@ -55,6 +54,7 @@ public class ClientListBox implements RMIClientListInterface, Runnable, Serializ
                 for(Client c : stub.getClients()){
                     System.out.println("Client:"+c.getIpAddress());
                 }
+                
                 System.out.println("Clients are: ");
                 Thread.sleep(2000);
             }
@@ -85,8 +85,37 @@ public class ClientListBox implements RMIClientListInterface, Runnable, Serializ
         }
         clients.add(c);
     }
-    public void removeClient(Client c){
-        clients.remove(c);
+    public void removeClient(Client c)throws RemoteException{
+        if(getClients() ==null){
+            return;
+        }
+        for(Client cl : getClients()){
+            if(cl.getIpAddress().equalsIgnoreCase(c.getIpAddress())){
+                clients.remove(cl);
+            }
+        }
+    }
+
+    @Override
+    public void removeClientByIp(String ip) {
+        for(Client cl : getClients()){
+            if(cl.getIpAddress().equalsIgnoreCase(ip)){
+                clients.remove(cl);
+            }
+        }
+    }
+
+    @Override
+    public void addMessageToList(String msg) throws RemoteException {
+        if(messages.size()>=15)
+            messages.remove(0);
+        messages.add(msg);
+    }
+
+    @Override
+    public ArrayList<String> getMessages() throws RemoteException {
+        
+        return messages;
     }
     
 }
